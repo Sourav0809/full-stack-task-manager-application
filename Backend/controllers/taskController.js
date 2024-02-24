@@ -36,7 +36,7 @@ const taskContoller = {
         const { id } = req.body
         try {
             const dbRes = await deleteTaskService(id)
-            res.send(dbRes)
+            return res.send(dbRes)
         } catch (error) {
             res.status(500).send({ message: 'Something went wrong' })
             console.log(error);
@@ -49,7 +49,7 @@ const taskContoller = {
         try {
             const findedTask = await findTaskService(id)
             await markAsCompletedService(findedTask)
-            res.send({ success: true, id: id })
+            return res.send({ success: true, id: id })
         } catch (error) {
             res.status(500).send({ message: 'Something went wrong' })
             console.log(error);
@@ -62,7 +62,7 @@ const taskContoller = {
         try {
             const findedTask = await findTaskService(id)
             const updatedTask = await editTaskService(findedTask, title, description)
-            res.send(updatedTask)
+            return res.send(updatedTask)
         } catch (error) {
             res.status(500).send({ message: 'Something went wrong' })
             console.log(error);
