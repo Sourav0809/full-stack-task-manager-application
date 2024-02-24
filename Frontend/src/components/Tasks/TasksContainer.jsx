@@ -1,12 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTaskAction } from "../../store/actions/taskActions";
+import {
+  deleteTaskAction,
+  markAsCompletedAction,
+} from "../../store/actions/taskActions";
 
 const TasksContainer = () => {
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.taskSlice);
 
+  // delete task handeler for dispatch delete action
   const deleteTaskHandeler = (id) => {
     dispatch(deleteTaskAction(id));
+  };
+
+  // dispatch mark as completed action
+  const markAsCompletedHandeler = (id) => {
+    dispatch(markAsCompletedAction(id));
   };
 
   return (
@@ -18,7 +27,14 @@ const TasksContainer = () => {
             <h1>{task.description}</h1>
             <h1>{task.completed ? "Completed" : "Not Completed"}</h1>
             <div className=" flex gap-2">
-              <button className=" bg-blue-400 p-2">Mark As Complted</button>
+              <button
+                className=" bg-blue-400 p-2"
+                onClick={() => {
+                  markAsCompletedHandeler(task.id);
+                }}
+              >
+                Mark As Complted
+              </button>
               <button className=" bg-blue-400 p-2">Edit</button>
               <button
                 className=" bg-blue-400 p-2"

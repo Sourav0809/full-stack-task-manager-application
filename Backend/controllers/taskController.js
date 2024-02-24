@@ -1,6 +1,8 @@
 const addTaskService = require("../services/addTaskService");
 const deleteTaskService = require("../services/deleteTaskService");
+const findTaskService = require("../services/findTaskService");
 const getAllTasksService = require("../services/getAllTasksService");
+const markAsCompletedService = require("../services/markAsCompletedService");
 
 const taskContoller = {
 
@@ -34,6 +36,19 @@ const taskContoller = {
         try {
             const dbRes = await deleteTaskService(id)
             res.send(dbRes)
+        } catch (error) {
+            res.status(500).send({ message: 'Something went wrong' })
+            console.log(error);
+        }
+    },
+
+    // for mark a task as completed
+    markAsCompleted: async (req, res) => {
+        const { id } = req.body
+        try {
+            const findedTask = await findTaskService(id)
+            await markAsCompletedService(findedTask)
+            res.send({ success: true, id: id })
         } catch (error) {
             res.status(500).send({ message: 'Something went wrong' })
             console.log(error);
