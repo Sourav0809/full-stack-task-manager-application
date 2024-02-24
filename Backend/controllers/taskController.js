@@ -1,5 +1,6 @@
 const addTaskService = require("../services/addTaskService");
 const deleteTaskService = require("../services/deleteTaskService");
+const editTaskService = require("../services/editTaskService");
 const findTaskService = require("../services/findTaskService");
 const getAllTasksService = require("../services/getAllTasksService");
 const markAsCompletedService = require("../services/markAsCompletedService");
@@ -53,7 +54,21 @@ const taskContoller = {
             res.status(500).send({ message: 'Something went wrong' })
             console.log(error);
         }
+    },
+
+    // for edit a task
+    onEditTask: async (req, res) => {
+        const { id, title, description } = req.body
+        try {
+            const findedTask = await findTaskService(id)
+            const updatedTask = await editTaskService(findedTask, title, description)
+            res.send(updatedTask)
+        } catch (error) {
+            res.status(500).send({ message: 'Something went wrong' })
+            console.log(error);
+        }
     }
+
 }
 
 // exports 

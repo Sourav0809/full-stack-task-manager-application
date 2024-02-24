@@ -1,21 +1,37 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTaskAction } from "../../store/actions/taskActions";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addTaskAction, editTaskAction } from "../../store/actions/taskActions";
 
 const AddTaskForm = () => {
+  const { isEditingTask, editTask } = useSelector((state) => state.taskSlice);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isEditingTask) {
+      setTitle(editTask.title);
+      setDescription(editTask.description);
+    }
+  }, [isEditingTask, editTask]);
+
   //  add a new task handeler
   const addTaskHandeler = (e) => {
     e.preventDefault();
-    const addedTask = {
-      title,
-      description,
-      completed: false,
-    };
-    dispatch(addTaskAction(addedTask));
+    if (!isEditingTask) {
+      const addedTask = {
+        title,
+        description,
+        completed: false,
+      };
+      dispatch(addTaskAction(addedTask));
+    } else {
+      const editedTask = {
+        title,
+        description,
+      };
+      dispatch(editTaskAction(editedTask));
+    }
     setTitle("");
     setDescription("");
   };
@@ -55,7 +71,7 @@ const AddTaskForm = () => {
         type="submit"
         className="bg-blue-600 text-white px-5 py-2 rounded-md"
       >
-        Add Task
+        {isEditingTask ? "Update Task" : " Add Task"}
       </button>
     </form>
   );

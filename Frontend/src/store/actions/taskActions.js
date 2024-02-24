@@ -1,7 +1,7 @@
 import toast from "react-hot-toast"
 import axios from 'axios'
-import { ADD_TASK_ENDPOINT, GET_TASKS_ENDPOINT, DELETE_TASK_ENDPOINT, MARK_AS_COMPLETED_ENDPOINT } from "../../api/agent"
-import { addTask } from "../reducers/taskSlice"
+import { ADD_TASK_ENDPOINT, GET_TASKS_ENDPOINT, DELETE_TASK_ENDPOINT, MARK_AS_COMPLETED_ENDPOINT, EDIT_TASK_ENDPOINT } from "../../api/agent"
+import { addTask, removeEditTask, setEditingFalse, ondeleteTask } from "../reducers/taskSlice"
 
 // add task action for adding a new task
 export const addTaskAction = (addedTask) => {
@@ -43,6 +43,8 @@ export const deleteTaskAction = (id) => {
             const { tasks } = structuredClone(getState().taskSlice)
             const newTasks = tasks.filter((task) => task.id !== data.id)
             dispatch(addTask(newTasks))
+            dispatch(ondeleteTask())
+
         } catch (error) {
             console.log(error)
             toast.error("error  !")
@@ -64,6 +66,32 @@ export const markAsCompletedAction = (id) => {
             })
             dispatch(addTask(modifiedTask))
             toast.success("Task Completed ")
+        } catch (error) {
+            console.log(error)
+            toast.error("error  !")
+        }
+    }
+}
+
+
+
+// edit task action
+export const editTaskAction = (editedTask) => {
+    return async (dispatch, getState) => {
+        try {
+            const { editTask, tasks } = structuredClone(getState().taskSlice)
+            const { data } = await axios.patch(EDIT_TASK_ENDPOINT, { ...editedTask, id: editTask.id })
+            const index = tasks.findIndex((task) => task.id === editTask.id)
+            const modifiedTasks = tasks.map((task) => {
+                if (task.id == editTask.id) {
+                    task[index] = data
+                }
+                return task
+            })
+            dispatch(addTask(modifiedTasks))
+            dispatch(setEditingFalse())
+            dispatch(removeEditTask())
+            toast.success("Task updated ")
         } catch (error) {
             console.log(error)
             toast.error("error  !")
