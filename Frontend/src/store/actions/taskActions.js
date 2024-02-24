@@ -81,10 +81,11 @@ export const editTaskAction = (editedTask) => {
         try {
             const { editTask, tasks } = structuredClone(getState().taskSlice)
             const { data } = await axios.patch(EDIT_TASK_ENDPOINT, { ...editedTask, id: editTask.id })
-            const index = tasks.findIndex((task) => task.id === editTask.id)
             const modifiedTasks = tasks.map((task) => {
-                if (task.id == editTask.id) {
-                    task[index] = data
+                if (task.id == data.id) {
+                    task.title = data.title
+                    task.description = data.description
+                    task.updatedAt = data.updatedAt
                 }
                 return task
             })
