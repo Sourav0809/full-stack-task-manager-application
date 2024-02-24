@@ -7,6 +7,7 @@ const AddTaskForm = () => {
   const [description, setDescription] = useState("");
   const dispatch = useDispatch();
 
+  //  add a new task handeler
   const addTaskHandeler = (e) => {
     e.preventDefault();
     const addedTask = {
@@ -15,6 +16,8 @@ const AddTaskForm = () => {
       completed: false,
     };
     dispatch(addTaskAction(addedTask));
+    setTitle("");
+    setDescription("");
   };
 
   return (

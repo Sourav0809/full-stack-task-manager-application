@@ -2,9 +2,9 @@
 const Tasks = require('../models/tasks')
 
 // add task service for add a new task 
-const addTaskService = async (title, description, completed) => {
+const getAllTasksService = async () => {
     try {
-        const dbRes = await Tasks.create({ title, description, completed })
+        const dbRes = await Tasks.findAll()
         return dbRes
     } catch (error) {
         console.log(error)
@@ -12,4 +12,4 @@ const addTaskService = async (title, description, completed) => {
     }
 }
 
-module.exports = addTaskService
+module.exports = getAllTasksService
